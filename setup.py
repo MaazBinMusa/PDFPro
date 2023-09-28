@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.11' 
+VERSION = '0.1.0' 
 DESCRIPTION = 'Package for parsing a PDF file and extracting data from it'
 LONG_DESCRIPTION = 'Package for parsing a PDF file and extracting data from it'
 
@@ -14,9 +14,7 @@ setup(
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         packages=find_packages(),
-        install_requires=[], # add any additional packages that 
-        # needs to be installed along with your package. Eg: 'caer'
-        
+        install_requires=["PyMuPDF","requests","pypdf"], 
         keywords=['python', 'PDF'],
         classifiers= [
             "Development Status :: 3 - Alpha",
