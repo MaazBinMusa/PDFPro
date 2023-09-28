@@ -3,77 +3,86 @@ import fitz
 import requests as reqs
 from pypdf import PdfReader
 
-PDFPATH = "None"
-URL = False
 
-def checklocalPDF(path):
+class PDFClass:
 
-    # check if file at this path is a pdf or not
-    # check if file at this path is a pdf or not
-    # check if file at this path is a pdf or not
+    def __init__(self,path=None,url=False):
 
-    try:
-        PdfReader(path)
-    except Exception as e:
-        print(str(e))
-        return False
+        self.path = path
+        self.url  = url
+        self.title = self._title()
+
+    def get_title(self):
+        return self.title
     
-    return True
+    def _checklocalPDF(self):
 
-def checkonlinePDF(path):
+        # check if file at this path is a pdf or not
+        # check if file at this path is a pdf or not
+        # check if file at this path is a pdf or not
 
-    r = reqs.get(path,timeout=15)
+        try:
+            PdfReader(self.path)
+        except Exception as e:
+            print(str(e))
+            return False
+        
+        return True
 
-    headers_to_check = ['content-type','content-disposition']
-    for header in headers_to_check:
-        if header in r.headers:
-            if "pdf" in r.headers[header]:
-                return True
-            
-    return True
+    def _checkonlinePDF(self):
 
-def maketemppdf(path):
+        r = reqs.get(self.path,timeout=15)
 
-    r = reqs.get(path,timeout=15)
+        headers_to_check = ['content-type','content-disposition']
+        for header in headers_to_check:
+            if header in r.headers:
+                if "pdf" in r.headers[header]:
+                    return True
+                
+        return True
 
-    # write the pdf as a temp file
-    with open("temp.pdf", "wb") as pdf_file:
-        pdf_file.write(r.content)
+    def _maketemppdf(self):
 
-    return "temp.pdf"
+        r = reqs.get(self.path,timeout=15)
 
-def extract_title(path,url):
+        # write the pdf as a temp file
+        with open("temp.pdf", "wb") as pdf_file:
+            pdf_file.write(r.content)
 
-    title = ""
+        return "temp.pdf"
 
-    try:
-        pdf_document = fitz.open(path)
-        title = pdf_document.metadata.get("title", "Title not found")
-        pdf_document.close()
+    def _extract_title(self):
 
-        if url:
-            # Delete the temp file if url was used
-            os.remove(path)
+        title = ""
 
-    except Exception as e:
-        title = "Unable to get title"
-    
-    return title
+        try:
+            pdf_document = fitz.open(self.path)
+            title = pdf_document.metadata.get("title", "Title not found")
+            pdf_document.close()
 
-def title(path,url=False):
+            if self.url:
+                # Delete the temp file if url was used
+                os.remove(self.path)
 
-    ispdf = False
+        except Exception as e:
+            title = "Unable to get title"
+        
+        return title
 
-    if url:
-        ispdf = checkonlinePDF(path)
-        path  = maketemppdf(path)
-    else:
-        ispdf = checklocalPDF(path)
+    def _title(self):
 
-    if not ispdf:
-        return "Not a PDF"
-    
-    return extract_title(path,url)
+        ispdf = False
 
-def section_headings(path,url=False):
-    return ["test"]
+        if self.url:
+            ispdf = self._checkonlinePDF()
+            self.path  = self._maketemppdf()
+        else:
+            ispdf = self._checklocalPDF()
+
+        if not ispdf:
+            return "Not a PDF"
+        
+        return self._extract_title()
+
+    def _section_headings(self):
+        return ["test"]

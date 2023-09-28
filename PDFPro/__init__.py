@@ -1,1 +1,1 @@
-from PDFPro.info import title
+from PDFPro.info import PDFClass
