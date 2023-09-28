@@ -42,7 +42,7 @@ def maketemppdf(path):
 
     return "temp.pdf"
 
-def extract_title(path):
+def extract_title(path,url):
 
     title = ""
 
@@ -51,8 +51,9 @@ def extract_title(path):
         title = pdf_document.metadata.get("title", "Title not found")
         pdf_document.close()
 
-        # Delete the temp file
-        os.remove(path)
+        if url:
+            # Delete the temp file if url was used
+            os.remove(path)
 
     except Exception as e:
         title = "Unable to get title"
@@ -72,7 +73,7 @@ def title(path,url=False):
     if not ispdf:
         return "Not a PDF"
     
-    return extract_title(path)
+    return extract_title(path,url)
 
 def section_headings(path,url=False):
     return ["test"]
