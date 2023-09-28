@@ -14,7 +14,8 @@ def checklocalPDF(path):
 
     try:
         PdfReader(path)
-    except:
+    except Exception as e:
+        print(str(e))
         return False
     
     return True
